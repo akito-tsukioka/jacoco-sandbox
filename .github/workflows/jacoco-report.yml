@@ -9,12 +9,15 @@ jobs:
     permissions:
       pull-requests: write
     steps:
-      - uses: actions/checkout@v2
       - name: Set up JDK
         uses: actions/setup-java@v4
         with:
           distribution: 'corretto'
           java-version: '17'
+
+      - name: checkout
+        uses: actions/checkout@v4
+
       - name: Run Coverage
         run: |
           chmod +x gradlew
