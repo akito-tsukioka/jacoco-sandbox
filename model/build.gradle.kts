@@ -5,3 +5,7 @@ apply {
 dependencies {
     implementation(project(":view"))
 }
+
+tasks.jacocoTestReport {
+    dependsOn(tasks.test)
+}
