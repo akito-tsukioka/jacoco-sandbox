@@ -6,6 +6,12 @@ plugins {
     id("org.springframework.boot") version "3.3.4"
     id("io.spring.dependency-management") version "1.1.6"
     id("jacoco")
+    id("jacoco-report-aggregation")
+}
+
+dependencies {
+    jacocoAggregation(project(":controller"))
+    jacocoAggregation(project(":model"))
 }
 
 allprojects {
@@ -66,12 +72,6 @@ tasks.register<JacocoReport>("codeCoverageReport") {
                     val testTask = this
                     sourceSets(subproject.sourceSets.main.get())
                     executionData(testTask)
-                }
-
-            subproject.tasks
-                .matching { it.extensions.findByType<JacocoTaskExtension>() != null }
-                .forEach {
-                    rootProject.tasks["codeCoverageReport"].dependsOn(it)
                 }
         }
     }

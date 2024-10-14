@@ -11,7 +11,3 @@ dependencies {
 tasks.getByName<org.springframework.boot.gradle.tasks.bundling.BootJar>("bootJar") {
     mainClass.set("com.example.jacocosandbox.JacocoSandboxApplicationKt")
 }
-
-tasks.jacocoTestReport {
-    dependsOn(tasks.test)
-}
