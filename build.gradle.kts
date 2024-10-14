@@ -57,10 +57,13 @@ tasks.withType<Test> {
 }
 
 tasks.register<JacocoReport>("codeCoverageReport") {
+    reports {
+        xml.required.set(true)
+    }
+
     subprojects {
         val subproject = this
         subproject.plugins.withType<JacocoPlugin>().configureEach {
-
             subproject.tasks
                 .matching { it.extensions.findByType<JacocoTaskExtension>() != null }
                 .configureEach {
