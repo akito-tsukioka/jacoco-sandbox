@@ -12,6 +12,7 @@ plugins {
 dependencies {
     jacocoAggregation(project(":controller"))
     jacocoAggregation(project(":model"))
+    jacocoAggregation(project(":view"))
 }
 
 allprojects {
