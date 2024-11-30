@@ -11,6 +11,10 @@ class GetGreeting {
 
     operator fun invoke(name: String): Greeting {
         val id = counter.incrementAndGet()
+        if (id <= 0) {
+            throw ArithmeticException()
+        }
+
         val content = String.format(template, name)
 
         return Greeting(id, content)

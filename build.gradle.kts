@@ -6,6 +6,7 @@ plugins {
     id("org.springframework.boot") version "3.3.4"
     id("io.spring.dependency-management") version "1.1.6"
     id("jacoco")
+    id("jacoco-report-aggregation")
 }
 
 allprojects {
@@ -56,11 +57,18 @@ tasks.withType<Test> {
     useJUnitPlatform()
 }
 
+tasks.jacocoTestReport {
+    reports {
+        xml.required.set(true)
+        csv.required.set(false)
+        html.outputLocation.set(file("${buildDir}/reports/jacoco"))
+    }
+}
+
 tasks.register<JacocoReport>("codeCoverageReport") {
     subprojects {
         val subproject = this
         subproject.plugins.withType<JacocoPlugin>().configureEach {
-
             subproject.tasks
                 .matching { it.extensions.findByType<JacocoTaskExtension>() != null }
                 .configureEach {
