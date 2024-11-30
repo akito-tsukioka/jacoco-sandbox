@@ -28,6 +28,7 @@ jobs:
         uses: madrapps/jacoco-report@v1.7.1
         with:
           paths: |
+            ${{ github.workspace }}/**/controller/build/reports/jacoco/test/jacocoTestReport.xml,
             ${{ github.workspace }}/**/model/build/reports/jacoco/test/jacocoTestReport.xml,
             ${{ github.workspace }}/**/view/build/reports/jacoco/test/jacocoTestReport.xml
           token: ${{ secrets.GITHUB_TOKEN }}
