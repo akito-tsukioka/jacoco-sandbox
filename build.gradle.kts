@@ -9,12 +9,6 @@ plugins {
     id("jacoco-report-aggregation")
 }
 
-dependencies {
-    jacocoAggregation(project(":controller"))
-    jacocoAggregation(project(":model"))
-    jacocoAggregation(project(":view"))
-}
-
 allprojects {
     group = "com.example"
     version = "0.0.1-SNAPSHOT"
