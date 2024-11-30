@@ -57,6 +57,14 @@ tasks.withType<Test> {
     useJUnitPlatform()
 }
 
+tasks.jacocoTestReport {
+    reports {
+        xml.required.set(true)
+        csv.required.set(false)
+        html.outputLocation.set(file("${buildDir}/reports/jacoco"))
+    }
+}
+
 tasks.register<JacocoReport>("codeCoverageReport") {
     subprojects {
         val subproject = this
@@ -69,9 +77,5 @@ tasks.register<JacocoReport>("codeCoverageReport") {
                     executionData(testTask)
                 }
         }
-    }
-
-    reports {
-        xml.required.set(true)
     }
 }
