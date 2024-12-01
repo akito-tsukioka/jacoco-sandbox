@@ -39,5 +39,4 @@ jobs:
           git fetch
           git checkout $GITHUB_HEAD_REF
           ./.github/workflows/jacoco-report.main.kts
-          cat -A ${OUTPUT_FILE_PATH}
-          gh pr comment "${PR_NUMBER}" -b ${OUTPUT_FILE_PATH}
+          gh pr comment "${PR_NUMBER}" -F ${OUTPUT_FILE_PATH}

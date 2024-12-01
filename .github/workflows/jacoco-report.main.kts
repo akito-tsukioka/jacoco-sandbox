@@ -113,7 +113,7 @@ data class Layer(
         val prefix =
             listOf(
                 "<details>",
-                "<summary>${name}</summary>",
+                "<summary>${name}</summary>\n",
                 "| Package | Source | C0 | C1 |",
                 "| --- | --- | --- | --- |",
             )
