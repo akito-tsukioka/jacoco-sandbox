@@ -30,5 +30,6 @@ jobs:
           COMMENT_URL: ${{ github.event.pull_request.comments_url }}
           REPORT_PATHS: ${{ github.workspace }}/**/controller/build/reports/jacoco/test/jacocoTestReport.xml,${{ github.workspace }}/**/model/build/reports/jacoco/test/jacocoTestReport.xml,${{ github.workspace }}/**/view/build/reports/jacoco/test/jacocoTestReport.xml
         run: |
+          git fetch
           git checkout $GITHUB_HEAD_REF
           ./.github/workflows/jacoco-report.main.kts
