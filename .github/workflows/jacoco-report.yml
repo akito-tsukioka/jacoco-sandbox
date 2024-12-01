@@ -31,8 +31,9 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           COMMENT_URL: ${{ github.event.pull_request.comments_url }}
-          REPORT_PATHS: ${{ github.workspace }}/**/controller/build/reports/jacoco/test/jacocoTestReport.xml,${{ github.workspace }}/**/model/build/reports/jacoco/test/jacocoTestReport.xml,${{ github.workspace }}/**/view/build/reports/jacoco/test/jacocoTestReport.xml
+          REPORT_PATHS: ./controller/build/reports/jacoco/test/jacocoTestReport.xml,./model/build/reports/jacoco/test/jacocoTestReport.xml,./view/build/reports/jacoco/test/jacocoTestReport.xml
         run: |
+          ls -la
           chmod u+x ./.github/workflows/jacoco-report.main.kts
           git fetch
           git checkout $GITHUB_HEAD_REF
