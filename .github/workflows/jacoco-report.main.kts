@@ -57,7 +57,7 @@ fun main(reportPaths: List<String>) {
         Layer(layerName, packageCoverages)
     }
 
-    val body = reports.joinToString("<br>") { it.toTable() }
+    val body = reports.joinToString("\n") { it.toTable() }
     val file = File(outputFilePath)
     file.writeText(body, Charsets.UTF_8)
 }
@@ -135,6 +135,6 @@ data class Layer(
                 }
             }.flatten() + postfix
 
-        return table.joinToString("\r\n")
+        return table.joinToString("\n")
     }
 }
