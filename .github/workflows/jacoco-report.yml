@@ -32,11 +32,12 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           COMMENT_URL: ${{ github.event.pull_request.html_url }}
           PR_NUMBER: ${{ github.event.number }}
-          OUTPUT_FILE_PATH: /tmp/comment.md
+          OUTPUT_FILE_PATH: /tmp/comment.txt
           REPORT_PATHS: ./controller/build/reports/jacoco/test/jacocoTestReport.xml,./model/build/reports/jacoco/test/jacocoTestReport.xml,./view/build/reports/jacoco/test/jacocoTestReport.xml
         run: |
           chmod u+x ./.github/workflows/jacoco-report.main.kts
           git fetch
           git checkout $GITHUB_HEAD_REF
           ./.github/workflows/jacoco-report.main.kts
-          cat ${OUTPUT_FILE_PATH} | gh pr comment "${PR_NUMBER}" -F -
+          cat -A ${OUTPUT_FILE_PATH}
+          gh pr comment "${PR_NUMBER}" -F ${OUTPUT_FILE_PATH}
