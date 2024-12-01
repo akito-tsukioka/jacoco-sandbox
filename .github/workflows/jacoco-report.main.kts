@@ -55,9 +55,17 @@ fun main(reportPaths: List<String>) {
         Layer(layerName, packageCoverages)
     }
 
-    val body = reports.joinToString("\n") { it.toTable() }
+    val prefix =
+        listOf(
+            "## Summary\n",
+            "| layer | c0 | c1 | pass/fail |",
+            "| --- | ---: | ---: | :---: |",
+        )
+    val summary = prefix + reports.joinToString("\n") { it.overAll() }
+    val detail = reports.joinToString("\n") { it.toTable() }
+
     val file = File(outputFilePath)
-    file.writeText(body, Charsets.UTF_8)
+    file.writeText(listOf(summary, detail).joinToString("\n"), Charsets.UTF_8)
 }
 
 enum class CoverageType(
@@ -116,6 +124,47 @@ data class Layer(
     val name: String,
     val packages: List<Package>,
 ) {
+    fun overAll(): String {
+        val c0Missed =
+            packages.sumOf { pkg ->
+                pkg.sourceFiles.sumOf { sourceFile ->
+                    sourceFile.coverages.firstOrNull { it.type.isInstruction() }?.missed ?: 0.0
+                }
+            }
+        val c0Covered =
+            packages.sumOf { pkg ->
+                pkg.sourceFiles.sumOf { sourceFile ->
+                    sourceFile.coverages.firstOrNull { it.type.isInstruction() }?.covered ?: 0.0
+                }
+            }
+
+        val c1Missed =
+            packages.sumOf { pkg ->
+                pkg.sourceFiles.sumOf { sourceFile ->
+                    sourceFile.coverages.firstOrNull { it.type.isBranch() }?.missed ?: 0.0
+                }
+            }
+        val c1Covered =
+            packages.sumOf { pkg ->
+                pkg.sourceFiles.sumOf { sourceFile ->
+                    sourceFile.coverages.firstOrNull { it.type.isBranch() }?.covered ?: 0.0
+                }
+            }
+
+        val c0Coverage =
+            if (c0Missed + c0Covered > 0) (c0Covered / (c0Missed + c0Covered)) * 100
+            else 0.0
+
+        val c1Coverage =
+            if (c1Missed + c1Covered > 0) (c1Covered / (c1Missed + c1Covered)) * 100
+            else 0.0
+
+        val isPassed =
+            if (c0Coverage > passThreshold) ":green_circle:"
+            else ":red_circle:"
+
+        return "| $name | ${"%3.2f".format(c0Coverage)} | ${"%3.2f".format(c1Coverage)} | $isPassed |"
+    }
 
     fun toTable(): String {
         val prefix =
