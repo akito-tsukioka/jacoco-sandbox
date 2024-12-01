@@ -135,6 +135,6 @@ data class Layer(
                 }
             }.flatten() + postfix
 
-        return table.joinToString("\\n")
+        return table.joinToString("\r\n")
     }
 }
