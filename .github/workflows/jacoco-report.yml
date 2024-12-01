@@ -34,7 +34,9 @@ jobs:
           PR_NUMBER: ${{ github.event.number }}
           OUTPUT_FILE_PATH: /tmp/comment.txt
           REPORT_PATHS: ./controller/build/reports/jacoco/test/jacocoTestReport.xml,./model/build/reports/jacoco/test/jacocoTestReport.xml,./view/build/reports/jacoco/test/jacocoTestReport.xml
-          PASS_THRESHOLD: 60.0
+          PERMISSIBLE_THRESHOLD: 60.0
+          PRAISE_THRESHOLD: 75.0
+          EXEMPLARY_THRESHOLD: 90.0
         run: |
           chmod u+x ./.github/workflows/jacoco-report.main.kts
           git fetch

@@ -7,7 +7,9 @@ import javax.xml.parsers.DocumentBuilderFactory
 
 val reportPaths = System.getenv("REPORT_PATHS").toString().split(",")
 val outputFilePath: String = System.getenv("OUTPUT_FILE_PATH").toString()
-val passThreshold: Double = System.getenv("PASS_THRESHOLD").toDouble()
+val permissibleThreshold: Double = System.getenv("PERMISSIBLE_THRESHOLD").toDouble()
+val praiseThreshold: Double = System.getenv("PRAISE_THRESHOLD").toDouble()
+val exemplaryThreshold: Double = System.getenv("EXEMPLARY_THRESHOLD").toDouble()
 
 main(reportPaths)
 
@@ -160,8 +162,12 @@ data class Layer(
             else 0.0
 
         val isPassed =
-            if (c0Coverage > passThreshold) ":green_circle:"
-            else ":red_circle:"
+            when {
+                c0Coverage > exemplaryThreshold -> ":green_circle:"
+                c0Coverage > praiseThreshold -> ":yellow_circle:"
+                c0Coverage > permissibleThreshold -> ":orange_circle:"
+                else -> ":red_circle:"
+            }
 
         return "| $name | ${"%3.2f".format(c0Coverage)} | ${"%3.2f".format(c1Coverage)} | $isPassed |"
     }
@@ -183,8 +189,12 @@ data class Layer(
                     val c1Coverage = sourceFile.coverages.firstOrNull { it.type.isBranch() } ?: Coverage.EMPTY
 
                     val isPassed =
-                        if (c0Coverage.isPassed(passThreshold)) ":green_circle:"
-                        else ":red_circle:"
+                        when {
+                            c0Coverage.isPassed(exemplaryThreshold) -> ":green_circle:"
+                            c0Coverage.isPassed(praiseThreshold) -> ":yellow_circle:"
+                            c0Coverage.isPassed(permissibleThreshold) -> ":orange_circle:"
+                            else -> ":red_circle:"
+                        }
 
                     "| ${pkg.name} " +
                             "| ${sourceFile.name} " +
