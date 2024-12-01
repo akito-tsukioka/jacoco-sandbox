@@ -122,7 +122,7 @@ data class Layer(
             listOf(
                 "<details>",
                 "<summary>${name}</summary>\n",
-                "| Package | Source | C0 | C1 | isPassed |",
+                "| package | source | c0 | c1 | pass/fail |",
                 "| --- | --- | --- | --- | --- |",
             )
         val postfix = listOf("</details>")
