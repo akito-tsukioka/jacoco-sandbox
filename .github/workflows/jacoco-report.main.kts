@@ -131,7 +131,7 @@ data class Layer(
                             sourceFile.coverages.firstOrNull { it.type.isBranch() }?.coverage() ?: 0.0
                         )
 
-                    "| ${pkg.name} | ${sourceFile.name} | ${c0Coverage} | ${c1Coverage} |"
+                    "| ${pkg.name} | ${sourceFile.name} | $c0Coverage | $c1Coverage |"
                 }
             }.flatten() + postfix
 
