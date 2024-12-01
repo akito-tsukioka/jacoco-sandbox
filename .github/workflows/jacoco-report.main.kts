@@ -61,7 +61,7 @@ fun main(reportPaths: List<String>) {
             "| layer | c0 | c1 | pass/fail |",
             "| --- | ---: | ---: | :---: |",
         )
-    val summary = prefix + reports.joinToString("\n") { it.overAll() }
+    val summary = (prefix + reports.map { it.overAll() }).joinToString("\n")
     val detail = reports.joinToString("\n") { it.toTable() }
 
     val file = File(outputFilePath)
