@@ -5,11 +5,9 @@ import org.w3c.dom.Element
 import java.io.File
 import javax.xml.parsers.DocumentBuilderFactory
 
-
-val commentUrl: String = System.getenv("COMMENT_URL")
-val githubToken: String = System.getenv("GITHUB_TOKEN")
 val reportPaths = System.getenv("REPORT_PATHS").toString().split(",")
 val outputFilePath: String = System.getenv("OUTPUT_FILE_PATH").toString()
+val passThreshold: Double = System.getenv("PASS_THRESHOLD").toDouble()
 
 main(reportPaths)
 
@@ -92,6 +90,16 @@ data class Coverage(
     fun coverage(): Double =
         if (missed + covered > 0) (covered / (missed + covered)) * 100
         else 0.0
+
+    fun isPassed(threshold: Double) = coverage() > threshold
+
+    companion object {
+        val EMPTY = Coverage(
+            type = CoverageType.UNDEFINED,
+            missed = 0.0,
+            covered = 0.0,
+        )
+    }
 }
 
 data class SourceFile(
@@ -114,24 +122,27 @@ data class Layer(
             listOf(
                 "<details>",
                 "<summary>${name}</summary>\n",
-                "| Package | Source | C0 | C1 |",
-                "| --- | --- | --- | --- |",
+                "| Package | Source | C0 | C1 | isPassed |",
+                "| --- | --- | --- | --- | --- |",
             )
         val postfix = listOf("</details>")
 
         val table =
             prefix + packages.map { pkg ->
                 pkg.sourceFiles.map { sourceFile ->
-                    val c0Coverage =
-                        "%3.2f".format(
-                            sourceFile.coverages.firstOrNull { it.type.isInstruction() }?.coverage() ?: 0.0
-                        )
-                    val c1Coverage =
-                        "%3.2f".format(
-                            sourceFile.coverages.firstOrNull { it.type.isBranch() }?.coverage() ?: 0.0
-                        )
+                    val c0Coverage = sourceFile.coverages.firstOrNull { it.type.isInstruction() } ?: Coverage.EMPTY
+                    val c1Coverage = sourceFile.coverages.firstOrNull { it.type.isBranch() } ?: Coverage.EMPTY
 
-                    "| ${pkg.name} | ${sourceFile.name} | $c0Coverage | $c1Coverage |"
+                    val isPassed =
+                        if (c0Coverage.isPassed(passThreshold)) ":green_circle:"
+                        else ":red_circle:"
+
+                    "| ${pkg.name} " +
+                            "| ${sourceFile.name} " +
+                            "| ${"%3.2f".format(c0Coverage.coverage())} " +
+                            "| ${"%3.2f".format(c1Coverage.coverage())} " +
+                            "| $isPassed " +
+                            "|"
                 }
             }.flatten() + postfix
 
