@@ -64,7 +64,7 @@ fun main(reportPaths: List<String>) {
             "| --- | ---: | ---: | :---: |",
         )
     val summary = (prefix + reports.map { it.overAll() }).joinToString("\n")
-    val detail = reports.joinToString("\n") { it.toTable() }
+    val detail = "## Detail\n" + reports.joinToString("\n") { it.toTable() }
 
     val file = File(outputFilePath)
     file.writeText(listOf(summary, detail).joinToString("\n"), Charsets.UTF_8)
