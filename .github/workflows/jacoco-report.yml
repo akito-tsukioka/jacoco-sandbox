@@ -8,6 +8,9 @@ jobs:
     runs-on: ubuntu-latest
     permissions:
       pull-requests: write
+      actions: write
+      checks: write
+      contents: write
     steps:
       - name: Set up JDK
         uses: actions/setup-java@v4
@@ -25,12 +28,18 @@ jobs:
 
       - name: Add coverage to PR
         id: jacoco
-        uses: madrapps/jacoco-report@v1.7.1
-        with:
-          paths: |
-            ${{ github.workspace }}/**/controller/build/reports/jacoco/test/jacocoTestReport.xml,
-            ${{ github.workspace }}/**/model/build/reports/jacoco/test/jacocoTestReport.xml,
-            ${{ github.workspace }}/**/view/build/reports/jacoco/test/jacocoTestReport.xml
-          token: ${{ secrets.GITHUB_TOKEN }}
-          min-coverage-overall: 40
-          min-coverage-changed-files: 60
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          COMMENT_URL: ${{ github.event.pull_request.html_url }}
+          PR_NUMBER: ${{ github.event.number }}
+          OUTPUT_FILE_PATH: /tmp/comment.txt
+          REPORT_PATHS: ./controller/build/reports/jacoco/test/jacocoTestReport.xml,./model/build/reports/jacoco/test/jacocoTestReport.xml,./view/build/reports/jacoco/test/jacocoTestReport.xml
+          PERMISSIBLE_THRESHOLD: 60.0
+          PRAISE_THRESHOLD: 75.0
+          EXEMPLARY_THRESHOLD: 90.0
+        run: |
+          chmod u+x ./.github/workflows/jacoco-report.main.kts
+          git fetch
+          git checkout $GITHUB_HEAD_REF
+          ./.github/workflows/jacoco-report.main.kts
+          gh pr comment "${PR_NUMBER}" -F ${OUTPUT_FILE_PATH}

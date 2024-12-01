@@ -14,4 +14,12 @@ class GreetingTest{
 
         assertEquals(expected, Greeting(1, "Hello, Test!"))
     }
+
+    @Test
+    fun `EMPTY`() {
+        val testData = Greeting.EMPTY
+        val expected =  Greeting(-1, "")
+
+        assertEquals(expected, testData)
+    }
 }
