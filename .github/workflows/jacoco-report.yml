@@ -30,7 +30,7 @@ jobs:
         id: jacoco
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          COMMENT_URL: ${{ github.event.pull_request.comments_url }}
+          COMMENT_URL: ${{ github.event.pull_request.html_url }}
           REPORT_PATHS: ./controller/build/reports/jacoco/test/jacocoTestReport.xml,./model/build/reports/jacoco/test/jacocoTestReport.xml,./view/build/reports/jacoco/test/jacocoTestReport.xml
         run: |
           ls -la
