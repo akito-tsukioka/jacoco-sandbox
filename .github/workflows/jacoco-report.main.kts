@@ -1,21 +1,15 @@
 #!/usr/bin/env kotlin
 
-@file:Repository("https://repo1.maven.org/maven2/")
-@file:DependsOn("com.google.code.gson:gson:2.8.9")
-
-import com.google.gson.Gson
 import org.w3c.dom.Document
 import org.w3c.dom.Element
-import java.net.URI
-import java.net.http.HttpClient
-import java.net.http.HttpRequest
-import java.net.http.HttpResponse
+import java.io.File
 import javax.xml.parsers.DocumentBuilderFactory
 
 
 val commentUrl: String = System.getenv("COMMENT_URL")
 val githubToken: String = System.getenv("GITHUB_TOKEN")
 val reportPaths = System.getenv("REPORT_PATHS").toString().split(",")
+val outputFilePath: String = System.getenv("OUTPUT_FILE_PATH").toString()
 
 main(reportPaths)
 
@@ -64,20 +58,8 @@ fun main(reportPaths: List<String>) {
     }
 
     val body = reports.joinToString("\n") { it.toTable() }
-    val json = Gson().toJson(body)
-    println(json)
-
-    val request = HttpRequest.newBuilder()
-        .uri(URI.create(commentUrl))
-        .header("Content-Type", "application/json")
-        .header("Authorization", "token $githubToken")
-        .POST(HttpRequest.BodyPublishers.ofString(json))
-        .build()
-
-    val response = HttpClient.newHttpClient()
-        .send(request, HttpResponse.BodyHandlers.ofString())
-
-    println(response)
+    val file = File(outputFilePath)
+    file.writeText(body, Charsets.UTF_8)
 }
 
 enum class CoverageType(
