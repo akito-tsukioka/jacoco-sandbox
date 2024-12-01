@@ -1,18 +1,17 @@
 @file:DependsOn("com.google.code.gson:gson:2.8.9")
 
 import com.google.gson.Gson
-import java.io.File
+import org.w3c.dom.Document
+import org.w3c.dom.Element
 import java.net.URI
 import java.net.http.HttpClient
 import java.net.http.HttpRequest
 import java.net.http.HttpResponse
 import javax.xml.parsers.DocumentBuilderFactory
-import org.w3c.dom.Document
-import org.w3c.dom.Element
 
 
-val commentUrl = System.getenv("COMMENT_URL")
-val githubToken = System.getenv("GITHUB_TOKEN")
+val commentUrl: String = System.getenv("COMMENT_URL")
+val githubToken: String = System.getenv("GITHUB_TOKEN")
 val reportPaths = System.getenv("REPORT_PATHS").toString().split(",")
 
 main(reportPaths)
@@ -61,9 +60,7 @@ fun main(reportPaths: List<String>) {
         Layer(layerName, packageCoverages)
     }
 
-
-    val body = reports.map { it.toTable() }.joinToString("\n")
-
+    val body = reports.joinToString("\n") { it.toTable() }
     val json = Gson().toJson(body)
     println(json)
 
